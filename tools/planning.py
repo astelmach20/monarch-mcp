@@ -122,10 +122,13 @@ async def get_cash_flow(month: str | None = None) -> dict:
             total_income += amount
             key = f"{category_icon} {category_name}"
             income_by_cat[key] = income_by_cat.get(key, 0) + amount
-        elif group_type == "expense" or amount < 0:
-            total_expense += abs(amount)
+        else:
+            # Monarch signs expenses negative and refunds/reimbursements positive.
+            # Negating preserves the sign so refunds offset their original charge.
+            expense_amount = -amount
+            total_expense += expense_amount
             key = f"{category_icon} {category_name}"
-            expense_by_cat[key] = expense_by_cat.get(key, 0) + abs(amount)
+            expense_by_cat[key] = expense_by_cat.get(key, 0) + expense_amount
 
     savings = total_income - total_expense
     savings_rate = (savings / total_income * 100) if total_income > 0 else 0
@@ -137,7 +140,11 @@ async def get_cash_flow(month: str | None = None) -> dict:
         "savings": round(savings, 2),
         "savings_rate": f"{savings_rate:.1f}%",
         "income_by_category": {key: round(value, 2) for key, value in sorted(income_by_cat.items(), key=lambda x: -x[1])},
-        "expenses_by_category": {key: round(value, 2) for key, value in sorted(expense_by_cat.items(), key=lambda x: -x[1])},
+        "expenses_by_category": {
+            key: rounded
+            for key, value in sorted(expense_by_cat.items(), key=lambda x: -x[1])
+            if (rounded := round(value, 2)) != 0
+        },
     }
 
 
