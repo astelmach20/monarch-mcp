@@ -28,4 +28,4 @@ jobs:
         run: uvx ruff check .
 
       - name: ty type check
-        run: uvx ty check
+        run: uvx --with . ty check
