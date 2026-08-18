@@ -24,7 +24,7 @@ jobs:
         with:
           version: "0.12.5"
 
-      - name: Ruff lint
+      - name: Ruff lint and import order
         run: uvx ruff check .
 
       - name: ty type check
