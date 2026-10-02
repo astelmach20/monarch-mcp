@@ -15,10 +15,10 @@ def _transaction(amount: float, group_type: str | None, category: str) -> dict:
 class GetCashFlowTests(unittest.IsolatedAsyncioTestCase):
     async def test_expense_refunds_offset_charges(self) -> None:
         transactions = [
-            _transaction(-262.85, "expense", "Electronics"),
-            _transaction(262.85, "expense", "Electronics"),
-            _transaction(-359.28, "expense", "Electronics"),
-            _transaction(359.28, "expense", "Electronics"),
+            _transaction(-100.00, "expense", "Electronics"),
+            _transaction(100.00, "expense", "Electronics"),
+            _transaction(-40.00, "expense", "Electronics"),
+            _transaction(40.00, "expense", "Electronics"),
         ]
 
         with patch(
